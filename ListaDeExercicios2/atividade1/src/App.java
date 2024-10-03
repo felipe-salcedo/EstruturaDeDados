@@ -2,30 +2,47 @@ import javax.swing.JOptionPane;
 
 public class App {
     public static void main(String[] args) {
+        //Da valores para as variáveis inputVertices e inputArestas
         String inputVertices = JOptionPane.showInputDialog("Digite o número de vértices:");
         String inputArestas = JOptionPane.showInputDialog("Digite o número de arestas:");
 
+        //Verifica se uma das variáveis está vazia, caso esteja, mostra a mensagem "Vértices ou arestas vazias. Encerrando o programa."
         if (inputVertices == null || inputArestas == null) {
-            JOptionPane.showMessageDialog(null, "Entrada cancelada. Encerrando o programa.");
+            JOptionPane.showMessageDialog(null, "Vértices ou arestas vazias. Encerrando o programa.");
             System.exit(0);
         }
 
+        /*  passa os valores das variaveis inputVertices e inputArestas 
+            para as variáveis numVertices e numArestas
+        */
         int numVertices = Integer.parseInt(inputVertices);
         int numArestas = Integer.parseInt(inputArestas);
 
-        int[][] matrizAdjacencia = new int[numVertices][numVertices];
+        int[][] matrizAdjacencia = new int[numVertices][numVertices]; //cria a estrutura da matriz juntando dois vértices
         int numLaços = 0;
         int numArestasParalelas = 0;
 
+        /* O for processa a entrada de cada aresta e atualiza a matriz, laços e arestas paralelas
+         * que foram requisitadas nas variáveis acima
+        */
         for (int i = 0; i < numArestas; i++) {
+            /*  O usuário insere os vértices de origem e destino, por exemplo "1 2", 
+                separados por espaço
+            */
             String input = JOptionPane.showInputDialog("Digite a aresta " + (i + 1) + " (origem destino):");
+            //verifica se o usuário clicou no botao "Cancelar" e exibe a mensagem "Entrada cancelada. Encerrando o programa."
             if (input == null) {
                 JOptionPane.showMessageDialog(null, "Entrada cancelada. Encerrando o programa.");
                 System.exit(0);
             }
+            /*Verifica se o usuário separou os vértices de 
+             * entrada e destino por espaços, caso não tenha separado
+             * desse jeito exibe a mensagem "Os vértices precisam ser separados por um espaço. Tente novamente." e 
+             * volta a esta etapa para o usuário digitar corretamente
+             */
             String[] partes = input.split(" ");
             if (partes.length != 2) {
-                JOptionPane.showMessageDialog(null, "Entrada inválida para a aresta. Tente novamente.");
+                JOptionPane.showMessageDialog(null, "Os vértices precisam ser separados por um espaço. Tente novamente.");
                 i--;
                 continue;
             }
