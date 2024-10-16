@@ -2,59 +2,74 @@ import javax.swing.JOptionPane;
 
 public class App {
     public static void main(String[] args) {
-        //Da valores para as variáveis inputVertices e inputArestas
+        // Da valores para as variáveis inputVertices e inputArestas
         String inputVertices = JOptionPane.showInputDialog("Digite o número de vértices:");
         String inputArestas = JOptionPane.showInputDialog("Digite o número de arestas:");
 
-        //Verifica se uma das variáveis está vazia, caso esteja, mostra a mensagem "Vértices ou arestas vazias. Encerrando o programa."
+        // Verifica se uma das variáveis está vazia, caso esteja, mostra a mensagem
+        // "Vértices ou arestas vazias. Encerrando o programa."
         if (inputVertices == null || inputArestas == null) {
             JOptionPane.showMessageDialog(null, "Vértices ou arestas vazias. Encerrando o programa.");
             System.exit(0);
         }
 
-        /*  passa os valores das variaveis inputVertices e inputArestas 
-            para as variáveis numVertices e numArestas
-        */
+        /*
+         * passa os valores das variaveis inputVertices e inputArestas
+         * para as variáveis numVertices e numArestas
+         */
         int numVertices = Integer.parseInt(inputVertices);
         int numArestas = Integer.parseInt(inputArestas);
 
-        int[][] matrizAdjacencia = new int[numVertices][numVertices]; //cria a estrutura da matriz juntando dois vértices
+        int[][] matrizAdjacencia = new int[numVertices][numVertices]; // cria a estrutura da matriz juntando dois
+                                                                      // vértices
         int numLaços = 0;
         int numArestasParalelas = 0;
 
-        /* O for processa a entrada de cada aresta e atualiza a matriz, laços e arestas paralelas
+        /*
+         * O for processa a entrada de cada aresta e atualiza a matriz, laços e arestas
+         * paralelas
          * que foram requisitadas nas variáveis acima
-        */
+         */
         for (int i = 0; i < numArestas; i++) {
-            /*  O usuário insere os vértices de origem e destino, por exemplo "1 2", 
-                separados por espaço
-            */
+            /*
+             * O usuário insere os vértices de origem e destino, por exemplo "1 2",
+             * separados por espaço
+             */
             String input = JOptionPane.showInputDialog("Digite a aresta " + (i + 1) + " (origem destino):");
-            //verifica se o usuário clicou no botao "Cancelar" e exibe a mensagem "Entrada cancelada. Encerrando o programa."
+            // verifica se o usuário clicou no botao "Cancelar" e exibe a mensagem "Entrada
+            // cancelada. Encerrando o programa."
             if (input == null) {
                 JOptionPane.showMessageDialog(null, "Entrada cancelada. Encerrando o programa.");
                 System.exit(0);
             }
-            /*Verifica se o usuário separou os vértices de 
+            /*
+             * Verifica se o usuário separou os vértices de
              * entrada e destino por espaços, caso não tenha separado
-             * desse jeito exibe a mensagem "Os vértices precisam ser separados por um espaço. Tente novamente." e 
+             * desse jeito, exibe a mensagem
+             * "Os vértices precisam ser separados por um espaço. Tente novamente." e
              * volta a esta etapa para o usuário digitar corretamente
              */
             String[] partes = input.split(" ");
+
             if (partes.length != 2) {
-                JOptionPane.showMessageDialog(null, "Os vértices precisam ser separados por um espaço. Tente novamente.");
+                JOptionPane.showMessageDialog(null,
+                        "Os vértices precisam ser separados por um espaço. Tente novamente.");
                 i--;
                 continue;
             }
+
+            // Converte o texto (string) para números (int)
             int origem = Integer.parseInt(partes[0]) - 1;
             int destino = Integer.parseInt(partes[1]) - 1;
 
+            // Verifica se o valor das variáveis são menores que zero. Caso sejam, pede ao usuário que faça novamente
             if (origem < 0 || origem >= numVertices || destino < 0 || destino >= numVertices) {
-                JOptionPane.showMessageDialog(null, "Vértices fora dos limites. Tente novamente.");
+                JOptionPane.showMessageDialog(null, "Vértices menores que zero. Tente novamente.");
                 i--;
                 continue;
             }
 
+            // Verifica se existe um laço no grafo. Isso ocorre caso os vértices de origem e destino forem os mesmos
             if (origem == destino) {
                 numLaços++;
             }
@@ -64,10 +79,11 @@ public class App {
                 numArestasParalelas++;
             }
 
+            // Adiciona uma aresta entre os vértices de origem e destino cada vez que é executada
             matrizAdjacencia[origem][destino]++;
         }
 
-        // Imprimir a matriz de adjacência
+        // Imprime a matriz de adjacência
         StringBuilder matrizBuilder = new StringBuilder("Matriz de Adjacência para Dígrafo:\n");
         for (int i = 0; i < matrizAdjacencia.length; i++) {
             for (int j = 0; j < matrizAdjacencia[i].length; j++) {
