@@ -2,26 +2,36 @@ import javax.swing.JOptionPane;
 
 public class App {
     public static void main(String[] args) {
-        // Solicitar número de vértices e arestas
+
         String inputVertices = JOptionPane.showInputDialog("Digite o número de vértices:");
         String inputArestas = JOptionPane.showInputDialog("Digite o número de arestas:");
 
-        // Verificar se as entradas são válidas
+        /*
+        * Aqui colocamos uma verificação para ver se as entradas são válidas.
+        */
+
         if (inputVertices == null || inputArestas == null) {
-            JOptionPane.showMessageDialog(null, "Vértices ou arestas vazias. Encerrando o programa.");
+            JOptionPane.showMessageDialog(null, "Vértices ou arestas vazias.");
             System.exit(0);
         }
 
         int numVertices = Integer.parseInt(inputVertices);
         int numArestas = Integer.parseInt(inputArestas);
 
-        int[][] matrizIncidencia = new int[numVertices][numArestas]; // Cria a matriz de incidência
+        int[][] matrizIncidencia = new int[numVertices][numArestas];
         int numLaços = 0;
         int numArestasParalelas = 0;
 
-        // Processar as arestas e preencher a matriz de incidência
+        /*
+        * Nesse trecho processamos as arestas fornecidas e construímos a matriz de incidência
+        */
+
         for (int i = 0; i < numArestas; i++) {
-            // Solicitar vértices de origem e destino
+
+            /*
+            *  Aqui solicitamos com um input para o usuário escrever as vértices de origem e destino
+            */
+
             String input = JOptionPane.showInputDialog("Digite a aresta " + (i + 1) + " (origem destino):");
 
             if (input == null) {
@@ -45,12 +55,18 @@ public class App {
                 continue;
             }
 
-            // Verificar se é um laço
+            /*
+            * Se a origem for igual ao destino, é um laço
+            */
+            
             if (origem == destino) {
                 numLaços++;
             }
 
-            // Verificar arestas paralelas
+            /*
+            * Aresta paralela
+            */
+
             boolean arestaParalela = false;
             for (int j = 0; j < i; j++) {
                 if (matrizIncidencia[origem][j] == 1 && matrizIncidencia[destino][j] == -1) {
@@ -62,12 +78,18 @@ public class App {
                 numArestasParalelas++;
             }
 
-            // Preencher matriz de incidência para dígrafo
-            matrizIncidencia[origem][i] = 1; // Origem (+1)
-            matrizIncidencia[destino][i] = -1; // Destino (-1)
+            /*
+            * Preenchimento para a matriz de incidência para dígrafo
+            */
+
+            matrizIncidencia[origem][i] = 1;
+            matrizIncidencia[destino][i] = -1;
         }
 
-        // Imprimir a matriz de incidência
+        /*
+        * Aqui nós estamos imprimindo a matriz de incidência na tela
+        */
+
         StringBuilder matrizBuilder = new StringBuilder("Matriz de Incidência para Dígrafo:\n");
         for (int i = 0; i < matrizIncidencia.length; i++) {
             for (int j = 0; j < matrizIncidencia[i].length; j++) {
@@ -76,7 +98,10 @@ public class App {
             matrizBuilder.append("\n");
         }
 
-        // Determinar o grau de cada vértice (para grafos e dígrafos)
+        /*
+        * Parte de determinar o grau de cada vértice dos grafos e dígrafos
+        */
+
         StringBuilder grauBuilder = new StringBuilder("\nGrau de cada vértice:\n");
         for (int i = 0; i < numVertices; i++) {
             int grauEntrada = 0;
@@ -85,11 +110,11 @@ public class App {
 
             for (int j = 0; j < numArestas; j++) {
                 if (matrizIncidencia[i][j] == 1) {
-                    grauSaida++; // Aresta saindo
-                    grau++; // Para grafo
+                    grauSaida++;
+                    grau++; // grafos
                 } else if (matrizIncidencia[i][j] == -1) {
-                    grauEntrada++; // Aresta entrando
-                    grau++; // Para grafo
+                    grauEntrada++;
+                    grau++; // grafos
                 }
             }
 
@@ -97,42 +122,55 @@ public class App {
                     .append(", Grau de Saída = ").append(grauSaida).append(", Grau (grafo) = ").append(grau).append("\n");
         }
 
-        // Solicitar vértice para análise de vizinhos
-        String inputVertice = JOptionPane.showInputDialog("Digite o vértice a ser analisado para vizinhos:");
+        /*
+        * Aqui solicitamos o vértice para o usuário para analisar os vizinhos
+        */
+
+        String inputVertice = JOptionPane.showInputDialog("Digite o vértice para a análise de vizinhos:");
         if (inputVertice == null) {
-            JOptionPane.showMessageDialog(null, "Entrada cancelada. Encerrando o programa.");
+            JOptionPane.showMessageDialog(null, "Informação não aceita.");
             System.exit(0);
         }
         int verticeAnalisado = Integer.parseInt(inputVertice) - 1;
         if (verticeAnalisado < 0 || verticeAnalisado >= numVertices) {
-            JOptionPane.showMessageDialog(null, "Vértice fora dos limites. Encerrando o programa.");
+            JOptionPane.showMessageDialog(null, "Vértice fora dos limites.");
             System.exit(0);
         }
 
-        // Encontrar os vizinhos do vértice analisado
+        /*
+        * Fizemos dessa forma para encontrar os vizinhos do vértice
+        * Se é origem, deve encontrar destino. Se é destino, deve encontrar origem.
+        */
+
         StringBuilder vizinhosBuilder = new StringBuilder("\nVizinhos do vértice " + (verticeAnalisado + 1) + ":\n");
         for (int j = 0; j < numArestas; j++) {
-            if (matrizIncidencia[verticeAnalisado][j] == 1) { // Se o vértice analisado é a origem
+            if (matrizIncidencia[verticeAnalisado][j] == 1) {
                 for (int i = 0; i < numVertices; i++) {
-                    if (matrizIncidencia[i][j] == -1) { // Encontrar o destino
+                    if (matrizIncidencia[i][j] == -1) {
                         vizinhosBuilder.append("Vértice ").append(i + 1).append(" (Destino)\n");
                     }
                 }
-            } else if (matrizIncidencia[verticeAnalisado][j] == -1) { // Se o vértice analisado é o destino
+            } else if (matrizIncidencia[verticeAnalisado][j] == -1) {
                 for (int i = 0; i < numVertices; i++) {
-                    if (matrizIncidencia[i][j] == 1) { // Encontrar a origem
+                    if (matrizIncidencia[i][j] == 1) {
                         vizinhosBuilder.append("Vértice ").append(i + 1).append(" (Origem)\n");
                     }
                 }
             }
         }
 
-        // Informar quantidade de laços e arestas paralelas
+
+        /*
+        * Informamos a quantidade de laços e arestas paralelas
+        */
+        
         StringBuilder laçosParalelasBuilder = new StringBuilder("\nResumo:\n");
         laçosParalelasBuilder.append("Quantidade de laços: ").append(numLaços).append("\n")
                 .append("Quantidade de arestas paralelas: ").append(numArestasParalelas).append("\n");
 
-        // Exibir resultados
+        /*
+         * Resultados finais
+         */
         JOptionPane.showMessageDialog(null, matrizBuilder.toString() + grauBuilder.toString()
                 + vizinhosBuilder.toString() + laçosParalelasBuilder.toString());
     }
